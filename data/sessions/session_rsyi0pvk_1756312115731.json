@@ -1,0 +1,71 @@
+{
+  "created": "2025-08-27T16:28:44.819Z",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T16:35:06.044Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "time": "2025-08-27T16:35:06.044Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "Hi",
+      "time": "2025-08-27T16:39:14.051Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How may I help you today?",
+      "time": "2025-08-27T16:39:14.051Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "test",
+      "time": "2025-08-27T16:43:13.518Z"
+    },
+    {
+      "role": "assistant",
+      "content": "It looks like you're testing our conversation. Is there something specific you'd like to chat about or ask for help with?",
+      "time": "2025-08-27T16:43:13.518Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T16:57:42.663Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T16:57:42.663Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "Hi",
+      "time": "2025-08-27T16:58:50.060Z"
+    },
+    {
+      "role": "assistant",
+      "content": "[streamed response]",
+      "time": "2025-08-27T16:58:50.060Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T16:59:44.116Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "time": "2025-08-27T16:59:44.116Z",
+      "usedSearch": false
+    }
+  ]
+}

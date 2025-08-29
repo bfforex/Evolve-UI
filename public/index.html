@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Evolve UI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<style>
+  :root {
+    --primary: #00c8ff;
+    --primary-dark: #00a6d6;
+    --bg-gradient: linear-gradient(135deg, #0a1828, #1e3a47, #2d5a6b);
+    --glass-bg: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.7);
+    --success: #00ff87;
+    --warning: #ffb347;
+    --error: #ff6b6b;
+    --shadow: 0 8px 32px rgba(0,0,0,0.3);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  
+  body { 
+    margin: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  header { 
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+
+  .brand { 
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    background: linear-gradient(45deg, var(--primary), #ff6b6b, #00ff87);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .controls { 
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--glass-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+  }
+
+  .control-group:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-1px);
+  }
+
+  select, input[type="checkbox"] { accent-color: var(--primary); }
+  
+  select { 
+    background: transparent;
+    color: var(--text-primary);
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  button, .btn { 
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 200, 255, 0.3);
+    font-size: 0.9rem;
+  }
+
+  button:hover { 
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 200, 255, 0.4);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--glass-border);
+    box-shadow: none;
+  }
+
+  .btn-secondary:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+  }
+
+  #status-indicator {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  #chat { 
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scroll-behavior: smooth;
+  }
+
+  .message { 
+    max-width: 85%;
+    padding: 1rem 1.3rem;
+    border-radius: 16px;
+    line-height: 1.6;
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    word-wrap: break-word;
+  }
+
+  .user { 
+    align-self: flex-end;
+    background: linear-gradient(135deg, rgba(0, 200, 255, 0.15), rgba(0, 200, 255, 0.25));
+    border: 1px solid rgba(0, 200, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 200, 255, 0.1);
+  }
+
+  .ai { 
+    align-self: flex-start;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+
+  .message.typing {
+    background: linear-gradient(90deg, var(--glass-bg), rgba(255,255,255,0.1), var(--glass-bg));
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .meta { 
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 0.8rem;
+    padding: 0.5rem 0.8rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+  }
+
+  .meta a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .meta a:hover {
+    text-decoration: underline;
+  }
+
+  .memory-learned {
+    background: linear-gradient(135deg, rgba(0, 255, 135, 0.1), rgba(0, 255, 135, 0.05));
+    border-left: 3px solid var(--success);
+  }
+
+  pre { 
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    border-left: 4px solid var(--primary);
+  }
+
+  code { 
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+
+  #input-bar { 
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--glass-bg);
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    position: relative;
+  }
+
+  #prompt { 
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border-radius: 24px;
+    border: 2px solid transparent;
+    outline: none;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  #prompt:focus {
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 0 0 4px rgba(0, 200, 255, 0.1);
+  }
+
+  #prompt::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .input-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .voice-btn, .attachment-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .voice-btn:hover, .attachment-btn:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    transform: scale(1.1);
+  }
+
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    max-width: 300px;
+  }
+
+  .toast.show {
+    transform: translateX(0);
+  }
+
+  .toast.success { border-left: 4px solid var(--success); }
+  .toast.warning { border-left: 4px solid var(--warning); }
+  .toast.error { border-left: 4px solid var(--error); }
+
+  @keyframes slideIn { 
+    from { 
+      opacity: 0; 
+      transform: translateY(20px) scale(0.95);
+    } 
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1);
+    } 
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { 
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+    background-clip: content-box;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    header {
+      padding: 0.8rem 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .controls {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .control-group {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.85rem;
+    }
+    
+    .message {
+      max-width: 95%;
+      padding: 0.8rem 1rem;
+    }
+    
+    #input-bar {
+      padding: 0.8rem 1rem;
+    }
+    
+    #prompt {
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  /* Dark mode enhancements */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0a0a0a, #1a1a1a, #2a2a2a);
+    }
+  }
+
+  /* Loading states */
+  .loading {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* Enhanced focus states */
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Evolve UI</div>
+    <div class="controls">
+      <div class="control-group">
+        <label>Model</label>
+        <select id="model"></select>
+      </div>
+      <div class="control-group">
+        <input type="checkbox" id="autoSearch" checked>
+        <label for="autoSearch">Auto-search</label>
+      </div>
+      <div class="control-group">
+        <input type="checkbox" id="useMemory" checked>
+        <label for="useMemory">Memory</label>
+      </div>
+      <button id="clearMem" class="btn-secondary" title="Clear long-term memory">Clear Memory</button>
+      <button id="exportChat" class="btn-secondary" title="Export chat history">Export</button>
+    </div>
+    <div id="status-indicator"></div>
+  </header>
+
+  <div id="chat"></div>
+
+  <div id="input-bar">
+    <input id="prompt" type="text" placeholder="Ask me anything..." maxlength="2000"/>
+    <div class="input-actions">
+      <button class="voice-btn" id="voiceBtn" title="Voice input" aria-label="Voice input">🎤</button>
+      <button class="attachment-btn" id="attachBtn" title="Attach file" aria-label="Attach file">📎</button>
+      <button id="send" aria-label="Send message">Send</button>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" style="display: none;" accept=".txt,.json,.csv,.md" multiple>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    class EvolveUI {
+      constructor() {
+        this.elements = {
+          chat: document.getElementById('chat'),
+          promptInput: document.getElementById('prompt'),
+          sendBtn: document.getElementById('send'),
+          modelSelect: document.getElementById('model'),
+          autoSearch: document.getElementById('autoSearch'),
+          useMemory: document.getElementById('useMemory'),
+          clearMem: document.getElementById('clearMem'),
+          exportChat: document.getElementById('exportChat'),
+          voiceBtn: document.getElementById('voiceBtn'),
+          attachBtn: document.getElementById('attachBtn'),
+          fileInput: document.getElementById('fileInput'),
+          statusIndicator: document.getElementById('status-indicator')
+        };
+        
+        this.state = {
+          isTyping: false,
+          messageCount: 0,
+          lastActivity: Date.now()
+        };
+        
+        this.sessionId = this.getOrCreateSession();
+        this.init();
+      }
+
+      getOrCreateSession() {
+        let sessionId = localStorage.getItem('sessionId');
+        if (!sessionId) {
+          sessionId = 'session_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+          localStorage.setItem('sessionId', sessionId);
+        }
+        return sessionId;
+      }
+
+      init() {
+        this.loadHistory();
+        this.loadModels();
+        this.setupEventListeners();
+        this.setupKeyboardShortcuts();
+        this.startActivityMonitor();
+        
+        // Configure marked for better rendering
+        marked.setOptions({
+          breaks: true,
+          gfm: true,
+          highlight: (code, lang) => {
+            if (lang && hljs.getLanguage(lang)) {
+              return hljs.highlight(code, { language: lang }).value;
+            }
+            return hljs.highlightAuto(code).value;
+          }
+        });
+      }
+
+      setupEventListeners() {
+        this.elements.sendBtn.addEventListener('click', () => this.sendMessage());
+        this.elements.promptInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            this.sendMessage();
+          }
+        });
+        
+        this.elements.clearMem.addEventListener('click', () => this.clearMemory());
+        this.elements.exportChat.addEventListener('click', () => this.exportChat());
+        this.elements.voiceBtn.addEventListener('click', () => this.toggleVoiceInput());
+        this.elements.attachBtn.addEventListener('click', () => this.elements.fileInput.click());
+        this.elements.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+        
+        this.elements.modelSelect.addEventListener('change', () => {
+          localStorage.setItem('selectedModel', this.elements.modelSelect.value);
+          this.showToast('Model switched to ' + this.elements.modelSelect.value, 'success');
+        });
+
+        // Auto-save preferences
+        [this.elements.autoSearch, this.elements.useMemory].forEach(checkbox => {
+          checkbox.addEventListener('change', () => this.savePreferences());
+        });
+
+        // Input character counter
+        this.elements.promptInput.addEventListener('input', (e) => {
+          const remaining = 2000 - e.target.value.length;
+          if (remaining < 100) {
+            e.target.style.borderColor = remaining < 20 ? 'var(--error)' : 'var(--warning)';
+          } else {
+            e.target.style.borderColor = 'transparent';
+          }
+        });
+      }
+
+      setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+              case 'k':
+                e.preventDefault();
+                this.elements.promptInput.focus();
+                break;
+              case 'l':
+                e.preventDefault();
+                this.clearChat();
+                break;
+              case 'e':
+                e.preventDefault();
+                this.exportChat();
+                break;
+            }
+          }
+        });
+      }
+
+      startActivityMonitor() {
+        setInterval(() => {
+          const now = Date.now();
+          const inactive = now - this.state.lastActivity > 300000; // 5 minutes
+          this.elements.statusIndicator.style.background = inactive ? 'var(--warning)' : 'var(--success)';
+        }, 30000);
+      }
+
+      saveHistory() { 
+        try {
+          localStorage.setItem('evolveChatHistory', this.elements.chat.innerHTML);
+        } catch (e) {
+          console.warn('Could not save chat history:', e);
+        }
+      }
+
+      loadHistory() { 
+        try {
+          const saved = localStorage.getItem('evolveChatHistory');
+          if (saved) {
+            this.elements.chat.innerHTML = saved;
+            this.elements.chat.scrollTop = this.elements.chat.scrollHeight;
+            // Re-highlight code blocks
+            hljs.highlightAll();
+          }
+        } catch (e) {
+          console.warn('Could not load chat history:', e);
+        }
+      }
+
+      savePreferences() {
+        const prefs = {
+          autoSearch: this.elements.autoSearch.checked,
+          useMemory: this.elements.useMemory.checked,
+          model: this.elements.modelSelect.value
+        };
+        localStorage.setItem('evolvePreferences', JSON.stringify(prefs));
+      }
+
+      loadPreferences() {
+        try {
+          const saved = localStorage.getItem('evolvePreferences');
+          if (saved) {
+            const prefs = JSON.parse(saved);
+            this.elements.autoSearch.checked = prefs.autoSearch !== false;
+            this.elements.useMemory.checked = prefs.useMemory !== false;
+            if (prefs.model) this.elements.modelSelect.value = prefs.model;
+          }
+        } catch (e) {
+          console.warn('Could not load preferences:', e);
+        }
+      }
+
+      renderMessage(content, sender, metaHtml = null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        if (sender === 'ai') {
+          // Enhanced markdown rendering for AI responses
+          messageDiv.innerHTML = marked.parse(content);
+        } else {
+          messageDiv.textContent = content;
+        }
+        
+        if (metaHtml) {
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'meta';
+          metaDiv.innerHTML = metaHtml;
+          messageDiv.appendChild(metaDiv);
+        }
+        
+        this.elements.chat.appendChild(messageDiv);
+        this.elements.chat.scrollTop = this.elements.chat.scrollHeight;
+        
+        // Highlight code blocks
+        hljs.highlightAll();
+        
+        this.saveHistory();
+        this.state.messageCount++;
+        this.state.lastActivity = Date.now();
+      }
+
+      showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message ai typing';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = '<div style="display: flex; gap: 4px; align-items: center;"><div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.4s infinite;"></div><div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.4s infinite 0.2s;"></div><div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.4s infinite 0.4s;"></div></div>';
+        this.elements.chat.appendChild(typingDiv);
+        this.elements.chat.scrollTop = this.elements.chat.scrollHeight;
+        this.state.isTyping = true;
+      }
+
+      hideTypingIndicator() {
+        const typing = document.getElementById('typing-indicator');
+        if (typing) typing.remove();
+        this.state.isTyping = false;
+      }
+
+      async loadModels() {
+        try {
+          const response = await fetch('/api/models');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          
+          const data = await response.json();
+          this.elements.modelSelect.innerHTML = '';
+          
+          (data.models || []).forEach(model => {
+            const option = document.createElement('option');
+            option.value = model.name;
+            option.textContent = model.name;
+            this.elements.modelSelect.appendChild(option);
+          });
+          
+          // Load saved model preference
+          const savedModel = localStorage.getItem('selectedModel');
+          if (savedModel && [...this.elements.modelSelect.options].some(opt => opt.value === savedModel)) {
+            this.elements.modelSelect.value = savedModel;
+          }
+          
+          this.loadPreferences();
+          
+        } catch (error) {
+          this.renderMessage(`❌ Could not load models: ${error.message}`, 'ai');
+          this.showToast('Failed to load models', 'error');
+        }
+      }
+
+      async sendMessage() {
+        const message = this.elements.promptInput.value.trim();
+        if (!message || this.state.isTyping) return;
+
+        this.renderMessage(message, 'user');
+        this.elements.promptInput.value = '';
+        this.showTypingIndicator();
+
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: this.sessionId,
+              message: message,
+              model: this.elements.modelSelect.value,
+              autoSearch: this.elements.autoSearch.checked,
+              useMemory: this.elements.useMemory.checked
+            })
+          });
+
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          
+          const data = await response.json();
+          if (data.error) throw new Error(data.error);
+
+          this.hideTypingIndicator();
+
+          // Build metadata
+          const metaParts = [];
+          if (data.usedSearch) {
+            metaParts.push('<strong>🔍 Search:</strong> SearXNG');
+          }
+          if (data.retrievedMemory?.length) {
+            metaParts.push('<strong>🧠 Memory:</strong> ' + 
+              data.retrievedMemory.slice(0, 2).map(m => m.content).join(' • '));
+          }
+          if (data.sources?.length) {
+            metaParts.push('<strong>📚 Sources:</strong> ' + 
+              data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">[${s.idx}]</a>`).join(' '));
+          }
+          if (data.model) {
+            metaParts.push('<strong>🤖 Model:</strong> ' + data.model);
+          }
+
+          const metaHtml = metaParts.length ? metaParts.join(' • ') : null;
+          
+          this.renderMessage(data.answer || '*No response received*', 'ai', metaHtml);
+
+          // Show memory learning
+          if (data.memoryAdded?.length) {
+            const learnedContent = data.memoryAdded.map(m => m.content).join(' • ');
+            const memoryDiv = document.createElement('div');
+            memoryDiv.className = 'message ai memory-learned';
+            memoryDiv.innerHTML = `<strong>🧠 Learned:</strong> ${learnedContent}`;
+            this.elements.chat.appendChild(memoryDiv);
+            this.elements.chat.scrollTop = this.elements.chat.scrollHeight;
+            this.saveHistory();
+          }
+
+        } catch (error) {
+          this.hideTypingIndicator();
+          this.renderMessage(`❌ Error: ${error.message}`, 'ai');
+          this.showToast('Message failed to send', 'error');
+        }
+      }
+
+      async clearMemory() {
+        try {
+          const response = await fetch('/api/memory/clear', { method: 'POST' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          
+          this.renderMessage('🧠 Long-term memory has been cleared.', 'ai');
+          this.showToast('Memory cleared successfully', 'success');
+        } catch (error) {
+          this.showToast('Failed to clear memory', 'error');
+        }
+      }
+
+      clearChat() {
+        if (confirm('Clear all chat history? This cannot be undone.')) {
+          this.elements.chat.innerHTML = '';
+          this.saveHistory();
+          this.state.messageCount = 0;
+          this.showToast('Chat history cleared', 'success');
+        }
+      }
+
+      exportChat() {
+        const messages = Array.from(this.elements.chat.children)
+          .map(msg => ({
+            type: msg.classList.contains('user') ? 'user' : 'ai',
+            content: msg.textContent.trim(),
+            timestamp: new Date().toISOString()
+          }));
+        
+        const exportData = {
+          sessionId: this.sessionId,
+          exportedAt: new Date().toISOString(),
+          messageCount: messages.length,
+          messages: messages
+        };
+        
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `evolve-chat-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.showToast('Chat exported successfully', 'success');
+      }
+
+      toggleVoiceInput() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+          
+          recognition.continuous = false;
+          recognition.interimResults = false;
+          recognition.lang = 'en-US';
+          
+          recognition.onstart = () => {
+            this.elements.voiceBtn.textContent = '🔴';
+            this.elements.voiceBtn.title = 'Recording... Click to stop';
+            this.showToast('Listening...', 'success');
+          };
+          
+          recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            this.elements.promptInput.value = transcript;
+            this.elements.promptInput.focus();
+          };
+          
+          recognition.onerror = (event) => {
+            this.showToast('Speech recognition error: ' + event.error, 'error');
+          };
+          
+          recognition.onend = () => {
+            this.elements.voiceBtn.textContent = '🎤';
+            this.elements.voiceBtn.title = 'Voice input';
+          };
+          
+          recognition.start();
+        } else {
+          this.showToast('Speech recognition not supported in this browser', 'warning');
+        }
+      }
+
+      async handleFileUpload(event) {
+        const files = Array.from(event.target.files);
+        if (!files.length) return;
+
+        for (const file of files) {
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            this.showToast(`File ${file.name} is too large (max 5MB)`, 'error');
+            continue;
+          }
+
+          try {
+            const content = await this.readFileContent(file);
+            const preview = content.length > 500 ? content.substring(0, 500) + '...' : content;
+            
+            this.renderMessage(`📎 **${file.name}** (${this.formatFileSize(file.size)})\n\`\`\`\n${preview}\n\`\`\``, 'user');
+            
+            // Auto-send a message asking about the file
+            this.elements.promptInput.value = `I've uploaded a file called "${file.name}". Can you analyze its contents?`;
+            
+          } catch (error) {
+            this.showToast(`Error reading ${file.name}: ${error.message}`, 'error');
+          }
+        }
+        
+        // Clear the input
+        event.target.value = '';
+      }
+
+      readFileContent(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = (e) => reject(new Error('Failed to read file'));
+          reader.readAsText(file);
+        });
+      }
+
+      formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      showToast(message, type = 'info') {
+        // Remove existing toasts
+        document.querySelectorAll('.toast').forEach(toast => toast.remove());
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.2rem;">
+              ${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}
+            </span>
+            <span>${message}</span>
+          </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        // Auto-remove after 4 seconds
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      // Enhanced message rendering with better formatting
+      renderMessage(content, sender, metaHtml = null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        if (sender === 'ai') {
+          // Enhanced markdown rendering for AI responses
+          let processedContent = content;
+          
+          // Add syntax highlighting for inline code
+          processedContent = processedContent.replace(/`([^`]+)`/g, '<code>$1</code>');
+          
+          // Process LaTeX-style math (basic support)
+          processedContent = processedContent.replace(/\$\$([^$]+)\$\$/g, '<div style="text-align: center; font-family: serif; font-style: italic; margin: 0.5rem 0;">$1</div>');
+          processedContent = processedContent.replace(/\$([^$]+)\$/g, '<span style="font-family: serif; font-style: italic;">$1</span>');
+          
+          messageDiv.innerHTML = marked.parse(processedContent);
+          
+          // Add copy buttons to code blocks
+          messageDiv.querySelectorAll('pre code').forEach((codeBlock, index) => {
+            const pre = codeBlock.parentElement;
+            pre.style.position = 'relative';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerHTML = '📋';
+            copyBtn.style.cssText = `
+              position: absolute;
+              top: 0.5rem;
+              right: 0.5rem;
+              background: rgba(255,255,255,0.1);
+              border: none;
+              color: white;
+              padding: 0.25rem 0.5rem;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 0.8rem;
+              opacity: 0.7;
+              transition: opacity 0.2s;
+            `;
+            
+            copyBtn.addEventListener('click', () => {
+              navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                copyBtn.innerHTML = '✅';
+                setTimeout(() => copyBtn.innerHTML = '📋', 1000);
+                this.showToast('Code copied to clipboard', 'success');
+              });
+            });
+            
+            pre.addEventListener('mouseenter', () => copyBtn.style.opacity = '1');
+            pre.addEventListener('mouseleave', () => copyBtn.style.opacity = '0.7');
+            
+            pre.appendChild(copyBtn);
+          });
+          
+        } else {
+          // User messages - preserve formatting but escape HTML
+          messageDiv.textContent = content;
+        }
+        
+        if (metaHtml) {
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'meta';
+          metaDiv.innerHTML = metaHtml;
+          messageDiv.appendChild(metaDiv);
+        }
+        
+        // Add timestamp
+        const timestamp = document.createElement('div');
+        timestamp.style.cssText = `
+          font-size: 0.7rem;
+          opacity: 0.5;
+          margin-top: 0.5rem;
+          text-align: right;
+        `;
+        timestamp.textContent = new Date().toLocaleTimeString();
+        messageDiv.appendChild(timestamp);
+        
+        this.elements.chat.appendChild(messageDiv);
+        this.elements.chat.scrollTop = this.elements.chat.scrollHeight;
+        
+        // Highlight code blocks
+        hljs.highlightAll();
+        
+        this.saveHistory();
+        this.state.messageCount++;
+        this.state.lastActivity = Date.now();
+      }
+    }
+
+    // Enhanced CSS for copy buttons and additional features
+    const additionalStyles = `
+      .copy-btn:hover {
+        background: rgba(255,255,255,0.2) !important;
+        transform: scale(1.1);
+      }
+      
+      /* Enhanced search results styling */
+      .search-result {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        background: rgba(0,200,255,0.1);
+        border-left: 3px solid var(--primary);
+        border-radius: 4px;
+      }
+      
+      .search-result a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      
+      .search-result a:hover {
+        text-decoration: underline;
+      }
+      
+      /* Enhanced table styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      th {
+        background: rgba(0,200,255,0.2);
+        font-weight: 600;
+      }
+      
+      tr:hover {
+        background: rgba(255,255,255,0.05);
+      }
+      
+      /* Enhanced list styling */
+      ul, ol {
+        padding-left: 1.5rem;
+      }
+      
+      li {
+        margin: 0.25rem 0;
+        line-height: 1.5;
+      }
+      
+      li::marker {
+        color: var(--primary);
+      }
+      
+      /* Blockquote styling */
+      blockquote {
+        border-left: 4px solid var(--primary);
+        padding-left: 1rem;
+        margin: 1rem 0;
+        background: rgba(0,200,255,0.1);
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+      }
+      
+      /* Enhanced link styling */
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+      }
+      
+      a:hover {
+        border-bottom-color: var(--primary);
+      }
+      
+      /* Image styling */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      
+      /* Enhanced hr styling */
+      hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        margin: 2rem 0;
+      }
+      
+      /* Enhanced print styles */
+      @media print {
+        body {
+          background: white !important;
+          color: black !important;
+        }
+        
+        header, #input-bar {
+          display: none !important;
+        }
+        
+        .message {
+          border: 1px solid #ccc !important;
+          background: white !important;
+          color: black !important;
+          page-break-inside: avoid;
+        }
+      }
+      
+      /* Enhanced accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      
+      /* Enhanced high contrast mode */
+      @media (prefers-contrast: high) {
+        :root {
+          --primary: #00ffff;
+          --glass-bg: rgba(255,255,255,0.15);
+          --glass-border: rgba(255,255,255,0.3);
+        }
+      }
+    `;
+    
+    // Inject additional styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = additionalStyles;
+    document.head.appendChild(styleSheet);
+
+    // Initialize the enhanced UI
+    document.addEventListener('DOMContentLoaded', () => {
+      window.evolveUI = new EvolveUI();
+      
+      // Add welcome message if chat is empty
+      if (!localStorage.getItem('evolveChatHistory')) {
+        setTimeout(() => {
+          window.evolveUI.renderMessage(`# Welcome to Evolve UI! 🚀
+
+I'm your enhanced AI assistant with powerful features:
+
+## ✨ **New Features**
+- **🎤 Voice Input** - Click the microphone to speak your messages
+- **📎 File Upload** - Attach and analyze documents (txt, json, csv, md)
+- **📚 Smart Export** - Export your conversations in JSON format
+- **🧠 Advanced Memory** - I remember our conversations for better context
+- **🔍 Auto Search** - I can search the web for up-to-date information
+- **⌨️ Keyboard Shortcuts** - Use Ctrl+K to focus input, Ctrl+L to clear chat
+
+## 🎨 **Enhanced Experience**
+- Beautiful glassmorphic design with smooth animations
+- Syntax highlighting for code blocks with copy buttons
+- Real-time typing indicators and status updates
+- Mobile-responsive interface
+- Dark mode optimized
+
+## 🤖 **AI Capabilities**
+- Multiple model support via Ollama
+- Context-aware responses with memory integration
+- Web search integration for current information
+- File analysis and document processing
+
+**Try asking me anything - from coding help to research questions!**
+
+*Tip: Use the controls in the header to customize your experience.*`, 'ai');
+        }, 500);
+      }
+      
+      console.log('Evolve UI initialized successfully');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "created": "2025-08-27T13:15:05.988Z",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T13:17:27.977Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:17:27.977Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T13:20:59.801Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "time": "2025-08-27T13:20:59.801Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "can you search web for me about latest update in XRP price and possible trend?",
+      "time": "2025-08-27T13:22:38.695Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:22:38.695Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "can you search web for me about latest update in XRP price and possible trend?",
+      "time": "2025-08-27T13:29:34.531Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:29:34.533Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "hi qwen, what is the latest news for today in Philippines?",
+      "time": "2025-08-27T13:32:35.774Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:32:35.774Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "hi qwen, what is the latest news for today in Philippines?",
+      "time": "2025-08-27T13:40:41.440Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:40:41.440Z",
+      "usedSearch": true
+    }
+  ]
+}

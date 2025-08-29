@@ -1,0 +1,93 @@
+{
+  "created": "2025-08-27T13:44:05.223Z",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi qwen! please fetch some news for today in the Philippines.",
+      "time": "2025-08-27T13:44:06.049Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T13:44:06.049Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "time": "2025-08-27T13:50:15.177Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "time": "2025-08-27T13:50:15.177Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "can you write a love song for me?",
+      "time": "2025-08-27T13:50:40.561Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Of course, here's a short poem I crafted just for you.\n\nYou came into my life like a ray of sunlight,\nYour smile was warm and bright as the sun.\nI've fallen in love with your eyes that sparkle,\nIn them, I saw the future all around.\n\nYou're more than just words or phrases I speak,\nWith every touch I feel you on my cheek.\nMy heart beats for you, it's not a secret,\nIn your embrace I find the peace to breathe.\n\nNo matter where life takes us, we'll stay true,\nHand in hand, through everything I believe.\nYour love is the reason why, forever will live,\nThe feeling of being with you, no one can compare.",
+      "time": "2025-08-27T13:50:40.561Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "search web for news in Philippines.",
+      "time": "2025-08-27T14:25:27.798Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T14:25:27.798Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "Hi qwen3!",
+      "time": "2025-08-27T14:29:28.048Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T14:29:28.048Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "Hi",
+      "time": "2025-08-27T15:51:42.453Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T15:51:42.453Z",
+      "usedSearch": true
+    },
+    {
+      "role": "user",
+      "content": "Hi",
+      "time": "2025-08-27T15:52:44.236Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you today?",
+      "time": "2025-08-27T15:52:44.236Z",
+      "usedSearch": false
+    },
+    {
+      "role": "user",
+      "content": "How are you doing?",
+      "time": "2025-08-27T15:55:20.664Z"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find reliable sources for that query.",
+      "time": "2025-08-27T15:55:20.664Z",
+      "usedSearch": true
+    }
+  ]
+}
