@@ -13,8 +13,8 @@
     "test:integration": "node test/integration-tests.js",
     "test:performance": "node test/performance-tests.js",
     "test:coverage": "c8 npm test",
-    "lint": "eslint server.js public/index.html test/*.js",
-    "lint:fix": "eslint --fix server.js public/index.html test/*.js",
+    "lint": "eslint server.js test/*.js",
+    "lint:fix": "eslint --fix server.js test/*.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

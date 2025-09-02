@@ -345,7 +345,7 @@ class PerformanceTester {
       console.log(`   📈 Memory retrieval stats: avg=${retrievalStats.avg}ms, min=${retrievalStats.min}ms, max=${retrievalStats.max}ms`);
       
       // Test memory endpoint performance under load
-      console.log(`\n📊 Testing memory endpoint under concurrent load...`);
+      console.log('\n📊 Testing memory endpoint under concurrent load...');
       const concurrentPromises = [];
       for (let i = 0; i < 10; i++) {
         concurrentPromises.push(this.makeRequest('/api/memory'));
@@ -406,7 +406,7 @@ class PerformanceTester {
         );
         
         if (response.status === 500) {
-          console.log(`   ⚠️  Large message test limited (dependencies not available)`);
+          console.log('   ⚠️  Large message test limited (dependencies not available)');
         } else {
           console.log(`   ✅ Large message processed successfully in ${response.responseTime}ms`);
         }
