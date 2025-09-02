@@ -20,6 +20,13 @@ logs
 .tmp/
 tmp/
 
+# Test artifacts
+test/test-*.txt
+test/test-*.json
+test/test-upload.*
+coverage/
+.nyc_output/
+
 # OS files
 .DS_Store
 Thumbs.db
