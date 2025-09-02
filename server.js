@@ -1,4 +1,4 @@
-// === ENHANCED SERVER.JS ===
+// === ENHANCED SERVER.JS - FIXED VERSION ===
 
 import 'dotenv/config';
 import express from 'express';
@@ -520,53 +520,6 @@ Search queries:
       return true;
     });
   }
-
-  async shouldContinueSearching(query, currentResults, targetQuality = 'high') {
-    if (currentResults.length === 0) return true;
-    if (currentResults.length >= 10) return false;
-
-    const prompt = `<thinking>
-Evaluating search results quality for query: "${query}"
-
-Current results: ${currentResults.length} sources
-Target quality: ${targetQuality}
-
-Results preview:
-${currentResults.slice(0, 3).map(r => `- ${r.title}: ${r.snippet}`).join('\n')}
-
-Should I continue searching for more comprehensive results?
-Factors to consider:
-- Result relevance and quality
-- Coverage of the topic
-- Diversity of sources
-- Sufficient information for a complete answer
-
-Making search continuation decision...
-</thinking>
-
-Continue searching: `;
-
-    try {
-      const result = await ollamaGenerate({
-        model: this.model,
-        prompt,
-        timeout: 20000
-      });
-
-      const thinking = this.engine.parseThinkingResponse(result.response || '');
-      const shouldContinue = thinking.response.toLowerCase().includes('yes') ||
-                           thinking.response.toLowerCase().includes('continue');
-      
-      return {
-        shouldContinue,
-        reason: thinking.response,
-        thoughts: thinking.thoughts
-      };
-    } catch (error) {
-      debugLog('Search continuation decision error:', error.message);
-      return { shouldContinue: false, reason: 'Analysis failed' };
-    }
-  }
 }
 
 // Cosine similarity calculation
@@ -723,55 +676,6 @@ async function retrieveLongTermMemory(query, k = 5, minSim = 0.3) {
     return results;
   } catch (error) {
     debugLog('Memory retrieval error:', error.message);
-    return [];
-  }
-}
-
-async function upsertLongTermMemory(items) {
-  if (!items?.length) return [];
-
-  try {
-    const memory = await loadMemory();
-    const existingContent = new Set(
-      memory.longTerm.map(item => item.content.trim().toLowerCase())
-    );
-    
-    const newItems = items
-      .filter(item => item?.content && item.content.length > 10)
-      .map(item => ({
-        content: item.content.trim(),
-        tags: item.tags || [],
-        importance: item.importance || 0.5
-      }))
-      .filter(item => !existingContent.has(item.content.toLowerCase()));
-
-    if (!newItems.length) return [];
-
-    const embeddings = await ollamaEmbed(newItems.map(item => item.content));
-    
-    newItems.forEach((item, index) => {
-      memory.longTerm.push({
-        id: memory.nextId++,
-        content: item.content,
-        tags: item.tags,
-        importance: item.importance,
-        addedAt: nowISO(),
-        embedding: embeddings[index]
-      });
-    });
-
-    // Keep memory size reasonable
-    if (memory.longTerm.length > 1000) {
-      memory.longTerm = memory.longTerm
-        .sort((a, b) => b.importance - a.importance)
-        .slice(0, 800);
-    }
-
-    await saveMemory(memory);
-    debugLog('Added memory items:', newItems.length);
-    return newItems;
-  } catch (error) {
-    debugLog('Memory upsert error:', error.message);
     return [];
   }
 }
@@ -1635,11 +1539,11 @@ app.get('/api/search/test', async (req, res) => {
 app.use(express.static('.'));
 
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public','index.html'));
 });
 
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public','index.html'));
 });
 
 // Error handler
