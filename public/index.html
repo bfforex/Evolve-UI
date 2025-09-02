@@ -325,17 +325,17 @@
           <h1 class="text-xl font-bold gradient-text">Enhanced Evolve UI</h1>
         </div>
         <div class="flex items-center gap-2">
-          <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors" title="Toggle theme">
+          <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors" title="Toggle theme" aria-label="Toggle between light and dark theme">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
             </svg>
           </button>
-          <button id="collapseSidebarBtn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors hidden md:inline-flex" title="Hide sidebar">
+          <button id="collapseSidebarBtn" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors hidden md:inline-flex" title="Hide sidebar" aria-label="Hide sidebar navigation">
             <svg id="collapseIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
-          <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors md:hidden" title="Close sidebar">
+          <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors md:hidden" title="Close sidebar" aria-label="Close sidebar navigation">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -344,7 +344,7 @@
       </div>
       
       <div class="p-4 border-b border-gray-200 dark:border-gray-800">
-        <button id="newChatBtn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium">
+        <button id="newChatBtn" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium" aria-label="Start a new chat conversation" title="Start a new chat conversation">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
@@ -386,7 +386,7 @@
         </div>
         
         <div class="flex items-center gap-2">
-          <select id="modelSelect" class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm">
+          <select id="modelSelect" class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm" title="Select AI model" aria-label="Select AI model for conversation" aria-describedby="model-help">
             <option value="">Loading models...</option>
           </select>
           <button id="settingsBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Settings">
@@ -438,8 +438,11 @@
                   placeholder="Ask me anything..." 
                   class="flex-1 bg-transparent resize-none px-3 py-3 focus:outline-none max-h-32 min-h-[44px]"
                   rows="1"
+                  aria-label="Type your message here"
+                  aria-describedby="input-help"
+                  title="Type your message or question for the AI assistant"
                 ></textarea>
-                <button id="sendBtn" class="p-2 m-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl transition-colors" title="Send message">
+                <button id="sendBtn" class="p-2 m-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white rounded-xl transition-colors" title="Send message" aria-label="Send message to AI assistant">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                   </svg>
@@ -450,22 +453,22 @@
               <div id="settingsPanel" class="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 hidden">
                 <div class="space-y-3">
                   <div class="flex items-center justify-between">
-                    <label class="text-sm font-medium">Smart Search</label>
-                    <input type="checkbox" id="autoSearchToggle" class="w-4 h-4 text-blue-600 rounded" checked>
+                    <label for="autoSearchToggle" class="text-sm font-medium">Smart Search</label>
+                    <input type="checkbox" id="autoSearchToggle" class="w-4 h-4 text-blue-600 rounded" checked aria-describedby="autosearch-help" title="Enable automatic web search for enhanced responses">
                   </div>
                   <div class="flex items-center justify-between">
-                    <label class="text-sm font-medium">Enhanced Memory</label>
-                    <input type="checkbox" id="memoryToggle" class="w-4 h-4 text-blue-600 rounded" checked>
+                    <label for="memoryToggle" class="text-sm font-medium">Enhanced Memory</label>
+                    <input type="checkbox" id="memoryToggle" class="w-4 h-4 text-blue-600 rounded" checked aria-describedby="memory-help" title="Enable enhanced memory to remember conversation context">
                   </div>
                   <div class="flex items-center justify-between">
                     <label class="text-sm font-medium">AI Thinking</label>
                     <span class="text-sm text-green-600 dark:text-green-400">Always On</span>
                   </div>
                   <hr class="border-gray-200 dark:border-gray-700">
-                  <button id="clearMemoryBtn" class="w-full text-left text-sm text-red-600 hover:text-red-700">
+                  <button id="clearMemoryBtn" class="w-full text-left text-sm text-red-600 hover:text-red-700" aria-label="Clear conversation memory" title="Clear all stored conversation memory">
                     Clear Memory
                   </button>
-                  <button id="exportChatBtn" class="w-full text-left text-sm text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                  <button id="exportChatBtn" class="w-full text-left text-sm text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" aria-label="Export chat history" title="Export conversation history to file">
                     Export Chat
                   </button>
                 </div>
@@ -482,7 +485,7 @@
   </div>
   
   <!-- Hidden file input -->
-  <input type="file" id="fileInput" multiple accept=".txt,.json,.csv,.md,.js,.py,.html,.css,.xml,.yaml,.yml" class="hidden">
+  <input type="file" id="fileInput" multiple accept=".txt,.json,.csv,.md,.js,.py,.html,.css,.xml,.yaml,.yml" class="hidden" aria-label="Upload files for analysis" aria-describedby="file-help" title="Upload files (.txt, .json, .csv, .md, .js, .py, .html, .css, .xml, .yaml, .yml)">
   
   <!-- Toast container -->
   <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
