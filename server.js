@@ -520,6 +520,61 @@ Search queries:
       return true;
     });
   }
+
+  async shouldContinueSearching(query, currentResults, complexity = 'medium') {
+    // Simple heuristic-based decision making
+    try {
+      const resultCount = Array.isArray(currentResults) ? currentResults.length : 0;
+      
+      // Decision logic based on result count and complexity
+      let shouldContinue = false;
+      let reason = '';
+      let confidence = 0.5;
+      
+      if (resultCount === 0) {
+        shouldContinue = true;
+        reason = 'No results found, continue searching';
+        confidence = 0.9;
+      } else if (resultCount < 3) {
+        shouldContinue = complexity === 'high';
+        reason = `Found ${resultCount} results, ${shouldContinue ? 'continue for more comprehensive coverage' : 'sufficient for basic query'}`;
+        confidence = 0.7;
+      } else if (resultCount < 8) {
+        shouldContinue = complexity === 'high' && resultCount < 5;
+        reason = `Found ${resultCount} results, ${shouldContinue ? 'continue for high complexity query' : 'sufficient coverage achieved'}`;
+        confidence = 0.8;
+      } else {
+        shouldContinue = false;
+        reason = `Found ${resultCount} results, sufficient coverage achieved`;
+        confidence = 0.9;
+      }
+
+      const thoughts = [{
+        content: `Search continuation analysis: ${reason} (${resultCount} results, complexity: ${complexity})`,
+        type: 'search_decision',
+        timestamp: nowISO()
+      }];
+
+      debugLog('Search continuation decision:', shouldContinue, reason, `(${resultCount} results)`);
+      
+      return {
+        shouldContinue,
+        reason,
+        confidence,
+        thoughts,
+        resultCount
+      };
+    } catch (error) {
+      debugLog('Search continuation decision error:', error.message);
+      return {
+        shouldContinue: false,
+        reason: `Decision error: ${error.message}`,
+        confidence: 0.3,
+        thoughts: [{ content: `Error in search continuation: ${error.message}`, type: 'error' }],
+        resultCount: 0
+      };
+    }
+  }
 }
 
 // Cosine similarity calculation
@@ -676,6 +731,78 @@ async function retrieveLongTermMemory(query, k = 5, minSim = 0.3) {
     return results;
   } catch (error) {
     debugLog('Memory retrieval error:', error.message);
+    return [];
+  }
+}
+
+async function upsertLongTermMemory(memoryItems) {
+  try {
+    if (!Array.isArray(memoryItems) || memoryItems.length === 0) {
+      debugLog('No valid memory items to upsert');
+      return [];
+    }
+
+    const memory = await loadMemory();
+    const added = [];
+    
+    for (const item of memoryItems) {
+      if (!item || typeof item !== 'object' || !item.content) {
+        debugLog('Skipping invalid memory item:', item);
+        continue;
+      }
+
+      // Generate embedding for the memory item
+      let embedding = null;
+      try {
+        const [itemEmbedding] = await ollamaEmbed(item.content);
+        embedding = itemEmbedding;
+      } catch (embedError) {
+        debugLog('Failed to generate embedding for memory item:', embedError.message);
+        // Continue without embedding - the item can still be stored
+      }
+
+      // Check for duplicates based on content similarity
+      let isDuplicate = false;
+      if (embedding && memory.longTerm.length > 0) {
+        for (const existing of memory.longTerm) {
+          if (existing.embedding && Array.isArray(existing.embedding)) {
+            const similarity = cosSim(embedding, existing.embedding);
+            if (similarity > 0.95) { // Very high similarity threshold for duplicates
+              isDuplicate = true;
+              debugLog('Skipping duplicate memory item (similarity:', similarity.toFixed(3), ')');
+              break;
+            }
+          }
+        }
+      }
+
+      if (!isDuplicate) {
+        const memoryItem = {
+          id: memory.nextId++,
+          content: item.content,
+          type: item.type || 'general',
+          importance: item.importance || 'medium',
+          tags: item.tags || [],
+          timestamp: nowISO(),
+          embedding: embedding,
+          source: item.source || 'system'
+        };
+
+        memory.longTerm.push(memoryItem);
+        added.push(memoryItem);
+        debugLog('Added memory item:', memoryItem.id, 'content:', memoryItem.content.slice(0, 50));
+      }
+    }
+
+    // Save updated memory
+    if (added.length > 0) {
+      await saveMemory(memory);
+      debugLog('Successfully upserted', added.length, 'memory items');
+    }
+
+    return added;
+  } catch (error) {
+    debugLog('Memory upsert error:', error.message);
     return [];
   }
 }
