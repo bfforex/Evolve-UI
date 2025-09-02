@@ -1,3 +1,20 @@
+/**
+ * Evolve-UI Server - Enhanced AI Chat Interface
+ * 
+ * Features:
+ * - AI Thinking Engine with real-time visualization
+ * - Smart Web Search with multi-query generation
+ * - Enhanced RAG with vector similarity matching
+ * - Persistent Memory System with automatic extraction
+ * - Session Management with CRUD operations
+ * - File Upload with multi-format support
+ * - Real-time Streaming with Server-Sent Events
+ * - Security with Helmet, CORS, and rate limiting
+ * 
+ * @version 2.2.0
+ * @author bfforex
+ */
+
 // === ENHANCED SERVER.JS - FIXED VERSION ===
 
 import 'dotenv/config';
@@ -21,6 +38,10 @@ const EMBED_MODEL = process.env.EMBED_MODEL || 'nomic-embed-text';
 const SEARXNG = (process.env.SEARXNG_URL || 'http://172.26.48.172:8080').replace(/\/+$/, '');
 const DEBUG = process.env.DEBUG === 'true';
 
+/**
+ * Debug logging function
+ * @param {...any} args - Arguments to log
+ */
 function debugLog(...args) {
   if (DEBUG) console.log('[DEBUG]', new Date().toISOString(), ...args);
 }
@@ -34,6 +55,11 @@ const uploadsDir = path.join(dataDir, 'uploads');
 await fs.mkdir(sessionsDir, { recursive: true });
 await fs.mkdir(uploadsDir, { recursive: true });
 
+/**
+ * Ensure a file exists with initial data
+ * @param {string} file - File path
+ * @param {any} init - Initial data to write if file doesn't exist
+ */
 async function ensureFile(file, init) {
   try {
     await fs.access(file);
@@ -44,7 +70,10 @@ async function ensureFile(file, init) {
 
 await ensureFile(memoryFile, { longTerm: [], nextId: 1 });
 
-// Utility functions
+/**
+ * Get current timestamp in ISO format
+ * @returns {string} ISO timestamp
+ */
 function nowISO() {
   return new Date().toISOString();
 }
@@ -75,22 +104,22 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
+        defaultSrc: ['\'self\''],
         scriptSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "https://cdnjs.cloudflare.com",
-          "https://cdn.tailwindcss.com"
+          '\'self\'',
+          '\'unsafe-inline\'',
+          'https://cdnjs.cloudflare.com',
+          'https://cdn.tailwindcss.com'
         ],
         styleSrc: [
-          "'self'", 
-          "'unsafe-inline'", 
-          "https://cdnjs.cloudflare.com", 
-          "https://fonts.googleapis.com"
+          '\'self\'', 
+          '\'unsafe-inline\'', 
+          'https://cdnjs.cloudflare.com', 
+          'https://fonts.googleapis.com'
         ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "ws:", "wss:"]
+        fontSrc: ['\'self\'', 'https://fonts.gstatic.com'],
+        imgSrc: ['\'self\'', 'data:', 'https:'],
+        connectSrc: ['\'self\'', 'ws:', 'wss:']
       }
     }
   })
